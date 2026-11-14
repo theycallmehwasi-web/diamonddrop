@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>html{background:#0a0d1c}body{margin:0}</style>
+<title>DiamondDrop Top-Up</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap">
+<style>
+/* Layout: split hero (copy left, live 3D gem right), trust strip, tilting pack grid, steps, order form, FAQ.
+   Single committed dark look: night-indigo ground, diamond-cyan accent, ember-orange for the buy action. */
+:root{
+  color-scheme:dark;
+  --bg:#0a0d1c;
+  --surface:#121733;
+  --surface-2:#1a2147;
+  --line:#2a3366;
+  --fg:#eaf0ff;
+  --muted:#9aa6d6;
+  --gem:#3de0ff;
+  --ember:#ff7a1a;
+  --ember-ink:#1a0b00;
+  --good:#5cf2a0;
+  --bad:#ff6b7a;
+  --font-display:"Chakra Petch","Segoe UI",system-ui,sans-serif;
+  --font-body:"Manrope","Segoe UI",system-ui,sans-serif;
+}
+html[lang="ur"]{--font-display:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif;--font-body:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0;
+}
+html[lang="ur"] body{line-height:1.9}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--gem)}
+:focus-visible{outline:2px solid var(--gem);outline-offset:3px;border-radius:6px}
+
+/* header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-weight:700;font-size:20px;letter-spacing:.02em;text-decoration:none;color:var(--fg);min-width:0}
+.brand svg{width:26px;height:26px;flex:none}
+.bar-r{display:flex;align-items:center;gap:8px}
+.pill{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--ember-ink);background:var(--ember);padding:9px 16px;border-radius:999px;white-space:nowrap}
+.lang{font:inherit;font-weight:700;font-size:14px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:24px;padding-block:28px 24px}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(34px,6vw,60px);line-height:1.1;margin:0 0 16px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--gem)}
+.hero p{color:var(--muted);max-width:46ch;margin:0 0 24px;font-size:17px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;border:0;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:12px;background:var(--ember);color:var(--ember-ink);box-shadow:0 8px 28px -8px var(--ember);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--fg);box-shadow:none;border:1px solid var(--line)}
+.stage{position:relative;aspect-ratio:1/1;max-width:100%;min-height:300px}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+.stage .glow{position:absolute;inset:12%;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--gem) 30%,transparent),transparent);filter:blur(10px)}
+.readout{position:absolute;left:50%;bottom:2%;transform:translateX(-50%);font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--gem);background:color-mix(in srgb,var(--bg) 75%,transparent);border:1px solid var(--line);padding:6px 14px;border-radius:999px;white-space:nowrap}
+
+/* trust strip */
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;padding-block:8px 12px}
+.trust div{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px;font-weight:600;font-size:15px;min-width:0}
+.trust svg{width:24px;height:24px;flex:none;stroke:var(--gem);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* sections */
+section{padding-block:36px}
+h2{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,4vw,36px);margin:0 0 6px;text-wrap:balance}
+.lede{color:var(--muted);margin:0 0 24px}
+
+/* packs */
+.packs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:16px;perspective:900px}
+.pack{
+  --rx:0deg;--ry:0deg;
+  position:relative;text-align:start;font:inherit;color:inherit;cursor:pointer;
+  background:linear-gradient(160deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0;
+  transform:rotateX(var(--rx)) rotateY(var(--ry));transform-style:preserve-3d;
+  transition:transform .12s ease-out,border-color .2s,box-shadow .2s;
+}
+.pack:hover{border-color:color-mix(in srgb,var(--gem) 55%,var(--line))}
+.pack[aria-checked="true"]{border-color:var(--gem);box-shadow:0 0 0 1px var(--gem),0 18px 40px -18px var(--gem)}
+.pack .ico{width:54px;height:54px;display:block;transform:translateZ(36px);filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}
+.pack .amt{font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-weight:700;font-size:30px;line-height:1.1;margin-top:10px;transform:translateZ(24px)}
+.pack .amt small{font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block}
+.pack .price{margin-top:8px;font-weight:700;font-size:18px;transform:translateZ(14px)}
+.pack .rate{font-size:13px;color:var(--muted);transform:translateZ(8px)}
+.pack .tag{position:absolute;top:12px;inset-inline-end:12px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--gem);color:#00232c;padding:3px 8px;border-radius:999px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;padding-inline-start:64px;position:relative;min-width:0}
+.steps li::before{content:counter(s);position:absolute;inset-inline-start:18px;top:16px;width:34px;height:34px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-weight:700;color:var(--gem)}
+.steps b{display:block;margin-bottom:2px}
+.steps span{color:var(--muted);font-size:15px}
+
+/* order */
+.order{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;min-width:0}
+label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+input,select{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+input::placeholder{color:#5e6a9c}
+.field{margin-bottom:16px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.err{color:var(--bad);font-size:13px;margin-top:6px;min-height:1.2em}
+.sum dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:10px 16px}
+.sum dt{color:var(--muted)}
+.sum dd{margin:0;text-align:end;font-weight:700;overflow-wrap:anywhere}
+.sum .total{border-top:1px dashed var(--line);margin-top:14px;padding-top:14px;display:flex;justify-content:space-between;align-items:baseline;font-family:"Chakra Petch","Segoe UI",system-ui,sans-serif;font-size:22px;font-weight:700}
+.sum .btn{width:100%;margin-top:16px}
+.status{font-size:14px;margin-top:12px;min-height:1.4em;color:var(--good)}
+.status.warn{color:var(--ember)}
+
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:700}
+details p{margin:10px 0 0;color:var(--muted)}
+footer{padding-block:28px 96px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:24px}
+
+/* floating chat button */
+.chat{position:fixed;z-index:25;inset-inline-end:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:8px;background:var(--good);color:#032414;font-weight:700;text-decoration:none;padding:12px 18px;border-radius:999px;box-shadow:0 10px 30px -8px rgba(92,242,160,.6)}
+.chat svg{width:22px;height:22px;fill:none;stroke:#032414;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr;padding-block:16px 20px}
+  .stage{order:-1;aspect-ratio:4/3;min-height:0}
+  .order{grid-template-columns:1fr}
+}
+@media (max-width:420px){.brand span{font-size:18px}.pill{padding:8px 12px;font-size:13px}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .pack,.btn{transition:none}
+}
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 4h16l6 8-14 17L2 12z" fill="#3de0ff"/><path d="M2 12h28M11 4l-3 8 8 17 8-17-3-8M8 12l8 17" fill="none" stroke="#0a0d1c" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <span id="shopName">DiamondDrop</span>
+    </a>
+    <div class="bar-r">
+      <button class="lang" id="lang" type="button" aria-label="Language">اردو</button>
+      <a class="pill" href="#order" data-t="navCta">Top up now</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <h1 data-t="h1">Free Fire <em>diamonds</em>, topped up by UID.</h1>
+      <p data-t="heroP">Pick a pack, send your player UID, pay, and the diamonds are added to your account. We never ask for your password.</p>
+      <div class="cta-row">
+        <a class="btn" href="#packs" data-t="ctaPack">Choose a pack</a>
+        <a class="btn ghost" href="#how" data-t="ctaHow">How it works</a>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="glow"></div>
+      <canvas id="gl" aria-label="Rotating 3D diamond. Move your pointer to tilt it."></canvas>
+      <div class="readout" id="readout"></div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <div><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span data-t="t1">No password needed</span></div>
+    <div><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg><span data-t="t2">Pay with Easypaisa</span></div>
+    <div><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span data-t="t3">Support on WhatsApp</span></div>
+  </div>
+
+  <section id="packs">
+    <h2 data-t="packsH">Diamond packs</h2>
+    <p class="lede" data-t="packsL">Tap a pack. The diamond above grows and gains orbiting gems as the pack gets bigger.</p>
+    <div class="packs" id="packGrid" role="radiogroup" aria-label="Diamond packs"></div>
+  </section>
+
+  <section id="how">
+    <h2 data-t="howH">How it works</h2>
+    <p class="lede" data-t="howL">Three steps, no login handover.</p>
+    <ol class="steps">
+      <li><b data-t="s1b">Enter your player UID</b><span data-t="s1s">Find it on your Free Fire profile, under your name.</span></li>
+      <li><b data-t="s2b">Choose a pack and pay</b><span data-t="s2s">Pay with Easypaisa, then send the payment proof on WhatsApp.</span></li>
+      <li><b data-t="s3b">Diamonds are added</b><span data-t="s3s">We top up the UID you gave and confirm with you on WhatsApp.</span></li>
+    </ol>
+  </section>
+
+  <section id="order">
+    <h2 data-t="ordH">Place your order</h2>
+    <p class="lede" data-t="ordL">Your order opens as a ready-written WhatsApp message.</p>
+    <div class="order">
+      <form class="card" id="form" novalidate>
+        <div class="field">
+          <label for="uid" data-t="lUid">Player UID</label>
+          <input id="uid" inputmode="numeric" autocomplete="off" placeholder="1234567890" maxlength="12">
+          <div class="err" id="uidErr" role="alert"></div>
+        </div>
+        <div class="field">
+          <label for="pack" data-t="lPack">Diamond pack</label>
+          <select id="pack"></select>
+        </div>
+        <div class="field">
+          <label for="method" data-t="lMethod">Payment method</label>
+          <select id="method"></select>
+          <div class="hint" data-t="hint">Payment details are sent to you on WhatsApp after you place the order.</div>
+        </div>
+      </form>
+      <aside class="card sum" aria-live="polite">
+        <dl>
+          <dt data-t="sUidL">UID</dt><dd id="sUid"></dd>
+          <dt data-t="sPackL">Pack</dt><dd id="sPack">-</dd>
+          <dt data-t="sMethodL">Payment</dt><dd id="sMethod">-</dd>
+        </dl>
+        <div class="total"><span data-t="sTotalL">Total</span><span id="sTotal">-</span></div>
+        <a class="btn" id="wa" href="#order" target="_blank" rel="noopener" data-t="waBtn">Order on WhatsApp</a>
+        <div class="status" id="status"></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2 data-t="faqH">Questions</h2>
+    <details><summary data-t="q1">Do you need my password?</summary><p data-t="a1">No. Only your player UID is needed. Never share your password, OTP or login details with anyone.</p></details>
+    <details><summary data-t="q2">Where do I find my UID?</summary><p data-t="a2">Open Free Fire, tap your profile, and the UID is the number shown under your nickname.</p></details>
+    <details><summary data-t="q3">What if I typed the wrong UID?</summary><p data-t="a3">Check the summary above before you pay. Diamonds go to the UID you send, so confirm it twice.</p></details>
+  </section>
+
+  <footer data-t="foot">This store is independent and is not affiliated with or endorsed by Garena. Free Fire is a trademark of its owner.</footer>
+</main>
+
+<a class="chat" id="chat" href="#order" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+  <span data-t="chat">Chat</span>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- EDIT ME ---------- */
+const CONFIG = {
+  shopName: "DiamondDrop",
+  whatsapp: "923481838018",   // country code + number, digits only
+  currency: "Rs",
+  methods: ["Easypaisa"],
+  packs: [                     // d = diamonds, p = price
+    { d: 13,   p: 30 },
+    { d: 35,   p: 70 },
+    { d: 70,   p: 130 },
+    { d: 140,  p: 270 },
+    { d: 355,  p: 670 },
+    { d: 713,  p: 1350 },
+    { d: 1426, p: 2800 }
+  ]
+};
+/* ----------------------------- */
+
+const I18N = {
+  en: {
+    navCta: "Top up now",
+    h1: 'Free Fire <em>diamonds</em>, topped up by UID.',
+    heroP: "Pick a pack, send your player UID, pay, and the diamonds are added to your account. We never ask for your password.",
+    ctaPack: "Choose a pack", ctaHow: "How it works",
+    t1: "No password needed", t2: "Pay with Easypaisa", t3: "Support on WhatsApp",
+    packsH: "Diamond packs",
+    packsL: "Tap a pack. The diamond above grows and gains orbiting gems as the pack gets bigger.",
+    howH: "How it works", howL: "Three steps, no login handover.",
+    s1b: "Enter your player UID", s1s: "Find it on your Free Fire profile, under your name.",
+    s2b: "Choose a pack and pay", s2s: "Pay with Easypaisa, then send the payment proof on WhatsApp.",
+    s3b: "Diamonds are added", s3s: "We top up the UID you gave and confirm with you on WhatsApp.",
+    ordH: "Place your order", ordL: "Your order opens as a ready-written WhatsApp message.",
+    lUid: "Player UID", lPack: "Diamond pack", lMethod: "Payment method",
+    hint: "Payment details are sent to you on WhatsApp after you place the order.",
+    sUidL: "UID", sPackL: "Pack", sMethodL: "Payment", sTotalL: "Total",
+    waBtn: "Order on WhatsApp",
+    faqH: "Questions",
+    q1: "Do you need my password?", a1: "No. Only your player UID is needed. Never share your password, OTP or login details with anyone.",
+    q2: "Where do I find my UID?", a2: "Open Free Fire, tap your profile, and the UID is the number shown under your nickname.",
+    q3: "What if I typed the wrong UID?", a3: "Check the summary above before you pay. Diamonds go to the UID you send, so confirm it twice.",
+    foot: "This store is independent and is not affiliated with or endorsed by Garena. Free Fire is a trademark of its owner.",
+    chat: "Chat",
+    diamonds: "diamonds", notEntered: "Not entered", per100: "per 100", lowest: "Lowest rate",
+    uidErr: "Enter your Free Fire UID, 6 to 12 digits.",
+    copied: "Order message copied. ", noNum: "WhatsApp number not set yet.", opening: "Opening WhatsApp with your order.",
+    hi: "Hi", wantTop: "I want a Free Fire top-up."
+  },
+  ur: {
+    navCta: "ابھی ٹاپ اپ کریں",
+    h1: 'فری فائر <em>ڈائمنڈز</em>، صرف UID سے ٹاپ اپ۔',
+    heroP: "پیک چنیں، اپنا پلیئر UID بھیجیں، ادائیگی کریں، اور ڈائمنڈز آپ کے اکاؤنٹ میں شامل ہو جائیں گے۔ ہم آپ سے کبھی پاس ورڈ نہیں مانگتے۔",
+    ctaPack: "پیک چنیں", ctaHow: "کیسے کام کرتا ہے",
+    t1: "پاس ورڈ کی ضرورت نہیں", t2: "Easypaisa سے ادائیگی", t3: "واٹس ایپ پر سپورٹ",
+    packsH: "ڈائمنڈ پیکس",
+    packsL: "کسی پیک پر ٹیپ کریں۔ پیک بڑا ہو تو اوپر کا ڈائمنڈ بھی بڑا ہوتا جاتا ہے۔",
+    howH: "کیسے کام کرتا ہے", howL: "تین قدم، پاس ورڈ دینے کی ضرورت نہیں۔",
+    s1b: "اپنا پلیئر UID لکھیں", s1s: "فری فائر پروفائل میں اپنے نام کے نیچے UID ملے گا۔",
+    s2b: "پیک چنیں اور ادائیگی کریں", s2s: "Easypaisa سے ادائیگی کریں، پھر واٹس ایپ پر ثبوت بھیجیں۔",
+    s3b: "ڈائمنڈز شامل ہو جائیں گے", s3s: "آپ کے دیے ہوئے UID پر ٹاپ اپ ہوگا اور ہم واٹس ایپ پر تصدیق کریں گے۔",
+    ordH: "آرڈر دیں", ordL: "آپ کا آرڈر واٹس ایپ پر لکھا لکھایا پیغام بن کر کھلے گا۔",
+    lUid: "پلیئر UID", lPack: "ڈائمنڈ پیک", lMethod: "ادائیگی کا طریقہ",
+    hint: "آرڈر دینے کے بعد ادائیگی کی تفصیل واٹس ایپ پر بھیجی جائے گی۔",
+    sUidL: "UID", sPackL: "پیک", sMethodL: "ادائیگی", sTotalL: "کل",
+    waBtn: "واٹس ایپ پر آرڈر کریں",
+    faqH: "سوالات",
+    q1: "کیا آپ کو میرا پاس ورڈ چاہیے؟", a1: "نہیں۔ صرف پلیئر UID چاہیے۔ اپنا پاس ورڈ، OTP یا لاگ اِن تفصیل کسی کو نہ دیں۔",
+    q2: "UID کہاں ملے گا؟", a2: "فری فائر کھولیں، پروفائل پر ٹیپ کریں، آپ کے نام کے نیچے لکھا نمبر آپ کا UID ہے۔",
+    q3: "اگر UID غلط لکھ دیا تو؟", a3: "ادائیگی سے پہلے اوپر خلاصہ دیکھ لیں۔ ڈائمنڈز اسی UID پر جاتے ہیں جو آپ بھیجتے ہیں، اس لیے دو بار چیک کریں۔",
+    foot: "یہ اسٹور آزاد ہے اور Garena سے وابستہ یا منظور شدہ نہیں۔ Free Fire اپنے مالک کا ٹریڈ مارک ہے۔",
+    chat: "چیٹ",
+    diamonds: "ڈائمنڈز", notEntered: "درج نہیں", per100: "فی 100", lowest: "کم ترین ریٹ",
+    uidErr: "اپنا فری فائر UID لکھیں، 6 سے 12 ہندسے۔",
+    copied: "آرڈر کا پیغام کاپی ہو گیا۔ ", noNum: "واٹس ایپ نمبر ابھی سیٹ نہیں۔", opening: "آپ کے آرڈر کے ساتھ واٹس ایپ کھل رہا ہے۔",
+    hi: "Hi", wantTop: "I want a Free Fire top-up."
+  }
+};
+
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => CONFIG.currency + " " + Number(n.toLocaleString("en-US", { maximumFractionDigits: 1 })).toLocaleString("en-US");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let selected = 3;
+let scene3d = null;
+let lang = "en";
+try { if (localStorage.getItem("dd-lang") === "ur") lang = "ur"; } catch (_) {}
+const t = (k) => I18N[lang][k];
+const waNum = () => CONFIG.whatsapp.replace(/\D/g, "");
+
+const gemSvg = '<svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 4h16l6 8-14 17L2 12z" fill="#3de0ff"/><path d="M8 4h16l-8 8z" fill="#bff6ff"/><path d="M2 12h28L16 29z" fill="#1fa6c9"/><path d="M2 12h28M11 4l-3 8 8 17 8-17-3-8M8 12l8 17" fill="none" stroke="#0a0d1c" stroke-opacity=".55" stroke-width="1" stroke-linejoin="round"/></svg>';
+
+function buildPacks() {
+  const grid = $("packGrid"), sel = $("pack"), meth = $("method");
+  const prevMethod = meth.value;
+  grid.innerHTML = ""; sel.innerHTML = ""; meth.innerHTML = "";
+  const rates = CONFIG.packs.map((k) => k.p / k.d * 100);
+  const best = rates.indexOf(Math.min(...rates));
+  CONFIG.packs.forEach((k, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "pack";
+    b.setAttribute("role", "radio");
+    b.dataset.i = i;
+    b.innerHTML = (i === best ? '<span class="tag">' + t("lowest") + "</span>" : "") + gemSvg +
+      '<div class="amt">' + k.d.toLocaleString("en-US") + "<small>" + t("diamonds") + "</small></div>" +
+      '<div class="price">' + fmt(k.p) + "</div>" +
+      '<div class="rate">' + fmt(rates[i]) + " " + t("per100") + "</div>";
+    b.addEventListener("click", () => choose(i));
+    b.addEventListener("pointermove", (e) => {
+      if (reduce || e.pointerType === "touch") return;
+      const r = b.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      b.style.setProperty("--ry", (x * 14).toFixed(1) + "deg");
+      b.style.setProperty("--rx", (-y * 14).toFixed(1) + "deg");
+    });
+    b.addEventListener("pointerleave", () => {
+      b.style.setProperty("--rx", "0deg");
+      b.style.setProperty("--ry", "0deg");
+    });
+    grid.appendChild(b);
+    const o = document.createElement("option");
+    o.value = i;
+    o.textContent = k.d.toLocaleString("en-US") + " " + t("diamonds") + " - " + fmt(k.p);
+    sel.appendChild(o);
+  });
+  CONFIG.methods.forEach((m) => {
+    const o = document.createElement("option");
+    o.value = m; o.textContent = m;
+    meth.appendChild(o);
+  });
+  if (prevMethod) meth.value = prevMethod;
+}
+
+function choose(i) {
+  selected = i;
+  document.querySelectorAll(".pack").forEach((el) =>
+    el.setAttribute("aria-checked", String(Number(el.dataset.i) === i)));
+  $("pack").value = i;
+  $("readout").textContent = CONFIG.packs[i].d.toLocaleString("en-US") + " " + t("diamonds");
+  if (scene3d) scene3d.setTier(i);
+  refresh();
+}
+
+function message() {
+  const k = CONFIG.packs[selected];
+  return t("hi") + " " + CONFIG.shopName + "! " + t("wantTop") + "\n" +
+    "UID: " + $("uid").value.trim() + "\n" +
+    "Pack: " + k.d + " diamonds (" + fmt(k.p) + ")\n" +
+    "Payment: " + $("method").value;
+}
+function uidOk() { return /^\d{6,12}$/.test($("uid").value.trim()); }
+
+function refresh() {
+  const k = CONFIG.packs[selected];
+  const uid = $("uid").value.trim();
+  $("sUid").textContent = uid || t("notEntered");
+  $("sPack").textContent = k.d.toLocaleString("en-US") + " " + t("diamonds");
+  $("sMethod").textContent = $("method").value;
+  $("sTotal").textContent = fmt(k.p);
+  const n = waNum();
+  $("wa").href = n ? "https://wa.me/" + n + "?text=" + encodeURIComponent(message()) : "#order";
+  $("chat").href = n ? "https://wa.me/" + n : "#order";
+}
+
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-t]").forEach((el) => { el.innerHTML = t(el.dataset.t); });
+  $("shopName").textContent = CONFIG.shopName;
+  $("lang").textContent = lang === "en" ? "اردو" : "EN";
+  $("uidErr").textContent = "";
+  $("status").textContent = "";
+  buildPacks();
+  choose(selected);
+}
+
+$("lang").addEventListener("click", () => {
+  lang = lang === "en" ? "ur" : "en";
+  try { localStorage.setItem("dd-lang", lang); } catch (_) {}
+  applyLang();
+});
+$("pack").addEventListener("change", (e) => choose(Number(e.target.value)));
+$("method").addEventListener("change", refresh);
+$("uid").addEventListener("input", (e) => {
+  e.target.value = e.target.value.replace(/\D/g, "");
+  $("uidErr").textContent = "";
+  $("status").textContent = "";
+  refresh();
+});
+$("form").addEventListener("submit", (e) => e.preventDefault());
+
+$("wa").addEventListener("click", async (e) => {
+  const st = $("status");
+  st.className = "status";
+  if (!uidOk()) {
+    e.preventDefault();
+    $("uidErr").textContent = t("uidErr");
+    $("uid").focus();
+    return;
+  }
+  if (!waNum()) {
+    e.preventDefault();
+    let copied = false;
+    try { await navigator.clipboard.writeText(message()); copied = true; } catch (_) {}
+    st.className = "status warn";
+    st.textContent = (copied ? t("copied") : "") + t("noNum");
+    return;
+  }
+  st.textContent = t("opening");
+});
+
+/* ---------- 3D scene ---------- */
+function initScene() {
+  const canvas = $("gl");
+  let renderer;
+  try {
+    if (!window.THREE) throw new Error("no three");
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (err) {
+    canvas.style.display = "none";
+    $("stage").insertAdjacentHTML("afterbegin",
+      '<div style="position:absolute;inset:0;display:grid;place-items:center">' +
+      gemSvg.replace('class="ico"', 'style="width:46%;height:46%;filter:drop-shadow(0 20px 30px rgba(61,224,255,.35))"') + "</div>");
+    return null;
+  }
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 50);
+  camera.position.set(0, 0.2, 7);
+
+  scene.add(new THREE.AmbientLight(0x8aa0ff, 0.55));
+  const l1 = new THREE.PointLight(0x3de0ff, 2.2, 30); l1.position.set(4, 3, 5); scene.add(l1);
+  const l2 = new THREE.PointLight(0xff7a1a, 1.8, 30); l2.position.set(-5, -2, 3); scene.add(l2);
+  const l3 = new THREE.DirectionalLight(0xffffff, 0.6); l3.position.set(0, 5, 2); scene.add(l3);
+
+  function makeGem(color, emissive) {
+    const g = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({
+      color, emissive, emissiveIntensity: 0.9, metalness: 0.35, roughness: 0.12, flatShading: true
+    });
+    const crownGeo = new THREE.CylinderGeometry(0.62, 1, 0.5, 8, 1);
+    const pavGeo = new THREE.CylinderGeometry(1, 0, 1.4, 8, 1);
+    const crown = new THREE.Mesh(crownGeo, mat); crown.position.y = 0.45;
+    const pav = new THREE.Mesh(pavGeo, mat); pav.position.y = -0.5;
+    const lineMat = new THREE.LineBasicMaterial({ color: 0xcffaff, transparent: true, opacity: 0.5 });
+    const e1 = new THREE.LineSegments(new THREE.EdgesGeometry(crownGeo), lineMat); e1.position.copy(crown.position);
+    const e2 = new THREE.LineSegments(new THREE.EdgesGeometry(pavGeo), lineMat); e2.position.copy(pav.position);
+    g.add(crown, pav, e1, e2);
+    return g;
+  }
+
+  const hero = makeGem(0x3de0ff, 0x0b4a63);
+  scene.add(hero);
+
+  const orbit = [];
+  for (let i = 0; i < 6; i++) {
+    const m = makeGem(i % 2 ? 0x7be9ff : 0xffa45c, i % 2 ? 0x0b4a63 : 0x6a2a00);
+    scene.add(m);
+    orbit.push({ m, a: (i / 6) * Math.PI * 2, r: 2.3 + (i % 3) * 0.35, s: 0.35 + i * 0.05, tilt: (i - 2.5) * 0.18 });
+  }
+
+  const N = 180, pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    const r = 3 + Math.random() * 4, th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1);
+    pos[i * 3] = r * Math.sin(ph) * Math.cos(th);
+    pos[i * 3 + 1] = r * Math.sin(ph) * Math.sin(th);
+    pos[i * 3 + 2] = r * Math.cos(ph) - 1;
+  }
+  const pg = new THREE.BufferGeometry();
+  pg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  const dust = new THREE.Points(pg, new THREE.PointsMaterial({ color: 0x8be9ff, size: 0.04, transparent: true, opacity: 0.7 }));
+  scene.add(dust);
+
+  const maxTier = CONFIG.packs.length - 1;
+  let tier = selected, baseScale = 1, pulse = 0, targetScale = 1;
+  let px = 0, py = 0, tx = 0, ty = 0, running = true;
+  const speed = reduce ? 0.15 : 1;
+
+  function setTier(i) {
+    tier = i;
+    targetScale = 0.75 + (i / maxTier) * 0.65;
+    pulse = 0.28;
+  }
+  setTier(selected);
+  baseScale = targetScale;
+
+  function resize() {
+    const r = $("stage").getBoundingClientRect();
+    const w = Math.max(1, r.width), h = Math.max(1, r.height);
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe($("stage"));
+  resize();
+
+  $("stage").addEventListener("pointermove", (e) => {
+    const r = $("stage").getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+    ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  });
+  $("stage").addEventListener("pointerleave", () => { tx = 0; ty = 0; });
+
+  new IntersectionObserver((en) => { running = en[0].isIntersecting; if (running) loop(); }).observe($("stage"));
+
+  let t0 = 0, last = performance.now();
+  function loop(now) {
+    if (!running) return;
+    requestAnimationFrame(loop);
+    now = now || performance.now();
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    t0 += dt * speed;
+    px += (tx - px) * 0.06; py += (ty - py) * 0.06;
+
+    baseScale += (targetScale - baseScale) * 0.08;
+    pulse *= 0.9;
+    hero.scale.setScalar(baseScale + pulse);
+    hero.rotation.y = t0 * 0.9 + px * 0.6;
+    hero.rotation.x = py * 0.35;
+    hero.rotation.z = Math.sin(t0 * 0.7) * 0.06;
+    hero.position.y = Math.sin(t0 * 1.2) * 0.12;
+
+    const visibleCount = Math.round((tier / maxTier) * orbit.length);
+    orbit.forEach((o, i) => {
+      const target = i < visibleCount ? 1 : 0;
+      const s = o.m.userData.s ?? 0;
+      o.m.userData.s = s + (target - s) * 0.08;
+      o.m.visible = o.m.userData.s > 0.02;
+      const base = 0.2 + (i % 3) * 0.04;
+      o.m.scale.setScalar(base * o.m.userData.s);
+      const a = o.a + t0 * o.s;
+      o.m.position.set(Math.cos(a) * o.r, Math.sin(a * 1.3) * o.r * o.tilt + Math.sin(t0 + i) * 0.2, Math.sin(a) * o.r * 0.6);
+      o.m.rotation.y = t0 * 1.6 + i;
+      o.m.rotation.x = t0 * 0.8;
+    });
+
+    dust.rotation.y = t0 * 0.05;
+    renderer.render(scene, camera);
+  }
+  loop();
+  return { setTier };
+}
+
+applyLang();
+scene3d = initScene();
+</script>
+
+</body>
+</html>
